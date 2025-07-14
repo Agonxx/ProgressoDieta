@@ -194,7 +194,7 @@
                 <h2 class="section-title">Métricas Principais</h2>
                 <div class="charts-grid">
                     <div class="chart-container">
-                        <h3 class="chart-title">Métricas Principais (incluindo AMB e AGB)</h3>
+                        <h3 class="chart-title">Métricas Principais</h3>
                         <div class="chart-wrapper">
                             <canvas id="mainMetricsChart"></canvas>
                         </div>
@@ -324,16 +324,16 @@
         new Chart(mainMetricsCtx, {
             type: 'bar',
             data: {
-                labels: ['Peso (kg)', 'IMC', 'Massa Gorda (kg)', 'Massa Magra (kg)', 'Razão C/Q', 'Soma Dobras (mm)', 'AMB', 'AGB'],
+                labels: ['Peso (kg)', 'IMC', 'Massa Gorda (kg)', 'Massa Magra (kg)', 'Razão C/Q', 'Soma Dobras (mm)'],
                 datasets: [{
                     label: 'Junho',
-                    data: [data.junho.peso, data.junho.imc, data.junho.massaGordaKg, data.junho.massaMagraKg, data.junho.razaoCinturaQuadril * 100, data.junho.somaDobrasCutaneas, data.junho.amb, data.junho.agb],
+                    data: [data.junho.peso, data.junho.imc, data.junho.massaGordaKg, data.junho.massaMagraKg, data.junho.razaoCinturaQuadril * 100, data.junho.somaDobrasCutaneas],
                     backgroundColor: colors.junho,
                     borderColor: colors.junhoBorder,
                     borderWidth: 2
                 }, {
                     label: 'Julho',
-                    data: [data.julho.peso, data.julho.imc, data.julho.massaGordaKg, data.julho.massaMagraKg, data.julho.razaoCinturaQuadril * 100, data.julho.somaDobrasCutaneas, data.julho.amb, data.julho.agb],
+                    data: [data.julho.peso, data.julho.imc, data.julho.massaGordaKg, data.julho.massaMagraKg, data.julho.razaoCinturaQuadril * 100, data.julho.somaDobrasCutaneas],
                     backgroundColor: colors.julho,
                     borderColor: colors.julhoBorder,
                     borderWidth: 2
@@ -368,7 +368,7 @@
         new Chart(allCircumferencesCtx, {
             type: 'bar',
             data: {
-                labels: ['Ombro', 'Cintura', 'Quadril', 'Peitoral', 'Abdômen', 'Coxa', 'Panturrilha Esq', 'Panturrilha Dir', 'Braço Relaxado', 'Braço Contraído', 'Punho', 'Antebraço Esq', 'Antebraço Dir'],
+                labels: ['Ombro', 'Cintura', 'Quadril', 'Peitoral', 'Abdômen', 'Coxa', 'Panturrilha', 'Braço Contraído', 'Punho', 'Antebraço'],
                 datasets: [{
                     label: 'Junho',
                     data: [
@@ -378,13 +378,10 @@
                         data.junho.circunferencias.peitoral,
                         data.junho.circunferencias.abdomen,
                         data.junho.circunferencias.coxa,
-                        data.junho.circunferencias.panturrilhaEsq,
-                        data.junho.circunferencias.panturrilhaDir,
-                        data.junho.circunferencias.bracoRelaxado,
+                        (data.junho.circunferencias.panturrilhaEsq + data.junho.circunferencias.panturrilhaDir) / 2,
                         data.junho.circunferencias.bracoContraido,
                         data.junho.circunferencias.punho,
-                        data.junho.circunferencias.antebracoEsq,
-                        data.junho.circunferencias.antebracoDir
+                        (data.junho.circunferencias.antebracoEsq + data.junho.circunferencias.antebracoDir) / 2
                     ],
                     backgroundColor: colors.junho,
                     borderColor: colors.junhoBorder,
@@ -398,13 +395,10 @@
                         data.julho.circunferencias.peitoral,
                         data.julho.circunferencias.abdomen,
                         data.julho.circunferencias.coxa,
-                        data.julho.circunferencias.panturrilhaEsq,
-                        data.julho.circunferencias.panturrilhaDir,
-                        data.julho.circunferencias.bracoRelaxado,
+                        (data.julho.circunferencias.panturrilhaEsq + data.julho.circunferencias.panturrilhaDir) / 2,
                         data.julho.circunferencias.bracoContraido,
                         data.julho.circunferencias.punho,
-                        data.julho.circunferencias.antebracoEsq,
-                        data.julho.circunferencias.antebracoDir
+                        (data.julho.circunferencias.antebracoEsq + data.julho.circunferencias.antebracoDir) / 2
                     ],
                     backgroundColor: colors.julho,
                     borderColor: colors.julhoBorder,
