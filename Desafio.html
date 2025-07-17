@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Geração de Relatórios Assíncronos - Plano de Projeto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .nav {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .section h4 {
+            color: #555;
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea20, #764ba220);
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .tech-card h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+        }
+
+        .step-item {
+            counter-increment: step-counter;
+            background: #f8f9fa;
+            margin: 1rem 0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 4rem;
+        }
+
+        .step-item::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1rem;
+            top: 1.5rem;
+            background: #667eea;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-snippet {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .endpoint {
+            background: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-family: monospace;
+            display: inline-block;
+            margin: 0.25rem;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .back-to-top:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Sistema de Geração de Relatórios Assíncronos</h1>
+            <p>Plano de Projeto para Evolução de Desenvolvedor .NET Pleno → Sênior</p>
+        </header>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="#conceito">Conceito</a></li>
+                <li><a href="#arquitetura">Arquitetura</a></li>
+                <li><a href="#funcionais">Req. Funcionais</a></li>
+                <li><a href="#tecnicos">Req. Técnicos</a></li>
+                <li><a href="#passos">Passo a Passo</a></li>
+            </ul>
+        </nav>
+
+        <section id="conceito" class="section">
+            <h2>Conceito do Projeto</h2>
+            
+            <div class="highlight-box">
+                <p><strong>Objetivo:</strong> Construir uma API que permite a usuários autenticados solicitar a geração de relatórios que consomem muito tempo. Em vez de fazer o usuário esperar, a API aceita o pedido instantaneamente, o coloca em uma fila e o processa em segundo plano.</p>
+            </div>
+
+            <h3>Por que este projeto é ideal para evolução?</h3>
+            
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h4>🐰 RabbitMQ</h4>
+                    <p>Justifica-se perfeitamente para desacoplar a solicitação (rápida) do processamento (lento), que é o caso de uso clássico para sistemas de mensageria.</p>
+                </div>
+                
+                <div class="tech-card">
+                    <h4>🧪 Testes Automatizados</h4>
+                    <p>A lógica de negócio, a integração com a fila e os endpoints da API são pontos críticos que exigem testes para garantir a confiabilidade do sistema.</p>
+                </div>
+                
+                <div class="tech-card">
+                    <h4>🐳 Docker</h4>
+                    <p>Múltiplos serviços rodando juntos (API, banco, RabbitMQ, worker). Orquestrar tudo com Docker Compose é a maneira moderna e profissional.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="arquitetura" class="section">
+            <h2>Arquitetura e Componentes</h2>
+
+            <h3>API Principal (Report.API)</h3>
+            <ul>
+                <li>Responsável por receber as requisições HTTP</li>
+                <li>Autenticação via JWT</li>
+                <li>Validação das solicitações</li>
+                <li>Publica mensagem no RabbitMQ</li>
+                <li>Persiste status inicial no SQL Server</li>
+                <li>Endpoints para consultar status e download</li>
+                <li><strong>Estrutura:</strong> Clean Architecture</li>
+            </ul>
+
+            <h3>Serviço de Geração (Report.Worker)</h3>
+            <ul>
+                <li>Projeto separado, tipo "Worker Service" do .NET</li>
+                <li>Escuta a fila do RabbitMQ para novas solicitações</li>
+                <li>Simula processamento (ex: Task.Delay(30000))</li>
+                <li>Atualiza status no SQL Server</li>
+                <li>Salva relatório gerado em local acessível</li>
+            </ul>
+
+            <h3>Infraestrutura</h3>
+            <ul>
+                <li><strong>Banco de Dados:</strong> SQL Server</li>
+                <li><strong>Mensageria:</strong> RabbitMQ</li>
+                <li><strong>Containerização:</strong> Docker</li>
+            </ul>
+        </section>
+
+        <section id="funcionais" class="section">
+            <h2>Requisitos Funcionais</h2>
+
+            <h3>Autenticação</h3>
+            <p>Endpoint <span class="endpoint">POST /api/auth/login</span> que retorna um token JWT para usuário fictício. Todas as rotas de relatório devem ser protegidas.</p>
+
+            <h3>Solicitar Relatório</h3>
+            <p>Endpoint <span class="endpoint">POST /api/reports</span> que recebe parâmetros do relatório:</p>
+            <div class="code-snippet">{"reportType": "YearlySales", "year": 2024}</div>
+            <ul>
+                <li>Retorna imediatamente <strong>202 Accepted</strong> com ID do pedido</li>
+                <li>Cria registro na tabela Reports com status "Pendente"</li>
+                <li>Publica mensagem na fila do RabbitMQ</li>
+            </ul>
+
+            <h3>Verificar Status</h3>
+            <p>Endpoint <span class="endpoint">GET /api/reports/{id}/status</span> que retorna o status atual:</p>
+            <ul>
+                <li>Pendente</li>
+                <li>Processando</li>
+                <li>Concluído</li>
+                <li>Falha</li>
+            </ul>
+
+            <h3>Download do Relatório</h3>
+            <p>Endpoint <span class="endpoint">GET /api/reports/{id}/download</span> que, se status for "Concluído", retorna o arquivo do relatório gerado.</p>
+        </section>
+
+        <section id="tecnicos" class="section">
+            <h2>Requisitos Técnicos e de Aprendizagem</h2>
+
+            <h3>1. Para Aprender RabbitMQ</h3>
+            
+            <h4>Configuração</h4>
+            <p>Na Report.API e Report.Worker, configure conexão com RabbitMQ usando MassTransit ou EasyNetQ.</p>
+
+            <h4>Publicação (Publisher)</h4>
+            <p>No serviço da API, após validar e salvar o pedido inicial, injete um serviço de mensageria e publique uma mensagem:</p>
+            <div class="code-snippet">new ReportRequestMessage { 
+    ReportId = newGuid, 
+    UserId = "...", 
+    Parameters = "..." 
+}</div>
+
+            <h4>Consumo (Consumer)</h4>
+            <p>No Report.Worker, crie um "consumer" que fica escutando a fila. Ao receber ReportRequestMessage, dispara a lógica de geração do relatório.</p>
+
+            <h3>2. Para Aprender Testes Automatizados (xUnit)</h3>
+
+            <h4>Testes de Unidade</h4>
+            <ul>
+                <li>Teste a camada Domain/Core (ex: entidade Report com método StartProcessing())</li>
+                <li>Teste validação dos parâmetros de entrada no Application/UseCases</li>
+            </ul>
+
+            <h4>Testes de Integração</h4>
+            <ul>
+                <li>Use WebApplicationFactory para subir versão em memória da API</li>
+                <li>Teste endpoint POST /api/reports:
+                    <ul>
+                        <li>Status code 202 Accepted</li>
+                        <li>Registro criado no banco de teste</li>
+                        <li>Mensagem publicada (usando mocks)</li>
+                    </ul>
+                </li>
+                <li>Teste Report.Worker: Publique mensagem em fila de teste e verifique atualização no banco</li>
+            </ul>
+
+            <h3>3. Para Aprender Docker</h3>
+
+            <h4>Dockerfile para a API</h4>
+            <p>Arquivo multi-stage que compila a aplicação e copia artefatos para imagem final (baseada em mcr.microsoft.com/dotnet/aspnet).</p>
+
+            <h4>Dockerfile para o Worker</h4>
+            <p>Similar ao da API, baseado em mcr.microsoft.com/dotnet/runtime.</p>
+
+            <h4>Docker Compose (docker-compose.yml)</h4>
+            <p>Defina 4 serviços:</p>
+            <ul>
+                <li><strong>report-api:</strong> Usa Dockerfile da API, mapeia porta (8080:80)</li>
+                <li><strong>report-worker:</strong> Usa Dockerfile do worker</li>
+                <li><strong>db:</strong> mcr.microsoft.com/mssql/server com senha SA e volume</li>
+                <li><strong>rabbitmq:</strong> rabbitmq:3-management (interface web para debug)</li>
+            </ul>
+        </section>
+
+        <section id="passos" class="section">
+            <h2>Passo a Passo Sugerido</h2>
+
+            <div class="step-list">
+                <div class="step-item">
+                    <h4>Estrutura Base</h4>
+                    <p>Crie a solução com projetos Report.API (ASP.NET Core API) e Report.Worker (Worker Service) seguindo Clean Architecture.</p>
+                </div>
+
+                <div class="step-item">
+                    <h4>API e Lógica Síncrona</h4>
+                    <p>Implemente autenticação JWT e endpoints, fingindo que a geração é síncrona. Salve no banco e retorne sucesso.</p>
+                </div>
+
+                <div class="step-item">
+                    <h4>Testes Iniciais</h4>
+                    <p>Escreva testes de unidade e integração para a parte já implementada. Garanta que a base está sólida.</p>
+                </div>
+
+                <div class="step-item">
+                    <h4>Integração com RabbitMQ</h4>
+                    <p>Adicione lógica de publicação na API e de consumo no Worker.</p>
+                </div>
+
+                <div class="step-item">
+                    <h4>Dockerização</h4>
+                    <p>Crie os Dockerfiles e o docker-compose.yml.</p>
+                </div>
+
+                <div class="step-item">
+                    <h4>Orquestração Final</h4>
+                    <p>Suba todo o ambiente com <code>docker-compose up</code>. Teste a comunicação entre contêineres e veja a mágica acontecer.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🎯 Resultado Final</h4>
+                <p>Ao final deste projeto, você terá experiência prática e completa sobre como Docker, Testes e RabbitMQ se integram para construir um sistema robusto e moderno, solidificando seu conhecimento de nível Pleno e preparando-o para o nível Sênior.</p>
+            </div>
+        </section>
+    </div>
+
+    <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Back to top button functionality
+        const backToTopButton = document.querySelector('.back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.style.display = 'block';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Highlight current section in navigation
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.background = '';
+                link.style.color = '#667eea';
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.style.background = '#667eea';
+                    link.style.color = 'white';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
