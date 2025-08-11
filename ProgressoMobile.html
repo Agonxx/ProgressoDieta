@@ -265,6 +265,36 @@
 
         <div id="circumferences" class="content-section">
             <h2 class="section-title">Circunferências</h2>
+            <!-- Adicionando checkboxes para filtrar circunferências -->
+            <div class="filter-controls" style="margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 8px;">
+                <p style="margin: 0 0 10px 0; font-weight: 600; color: #374151; font-size: 14px;">Selecione as medidas:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px;">
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-ombro" checked style="margin-right: 6px;">
+                        Ombro
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-cintura" checked style="margin-right: 6px;">
+                        Cintura
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-quadril" checked style="margin-right: 6px;">
+                        Quadril
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-peitoral" checked style="margin-right: 6px;">
+                        Peitoral
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-abdomen" checked style="margin-right: 6px;">
+                        Abdômen
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-coxa-circ" checked style="margin-right: 6px;">
+                        Coxa
+                    </label>
+                </div>
+            </div>
             <div class="chart-container">
                 <div class="chart-wrapper">
                     <canvas id="circumferencesChart"></canvas>
@@ -274,6 +304,40 @@
 
         <div id="skinfolds" class="content-section">
             <h2 class="section-title">Dobras Cutâneas</h2>
+            <!-- Adicionando checkboxes para filtrar medidas -->
+            <div class="filter-controls" style="margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 8px;">
+                <p style="margin: 0 0 10px 0; font-weight: 600; color: #374151; font-size: 14px;">Selecione as medidas:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px;">
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-abdominal" checked style="margin-right: 6px;">
+                        Abdominal
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-suprailiaca" checked style="margin-right: 6px;">
+                        Supra-ilíaca
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-subescapular" checked style="margin-right: 6px;">
+                        Subescapular
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-coxa" checked style="margin-right: 6px;">
+                        Coxa
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-triceps" checked style="margin-right: 6px;">
+                        Tríceps
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-axilar" checked style="margin-right: 6px;">
+                        Axilar
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 12px; color: #6b7280;">
+                        <input type="checkbox" id="filter-torax" checked style="margin-right: 6px;">
+                        Tórax
+                    </label>
+                </div>
+            </div>
             <div class="chart-container">
                 <div class="chart-wrapper">
                     <canvas id="skinfoldsChart"></canvas>
@@ -433,55 +497,57 @@
         const circumferencesCtx = document.getElementById('circumferencesChart').getContext('2d');
         const circumferenceLabels = ['Ombro', 'Cintura', 'Quadril', 'Peitoral', 'Abdômen', 'Coxa'];
         
-        new Chart(circumferencesCtx, {
+        const originalCircumferenceData = {
+            labels: circumferenceLabels,
+            datasets: [
+                {
+                    label: 'Jun',
+                    data: [
+                        data.junho.circunferencias.ombro,
+                        data.junho.circunferencias.cintura,
+                        data.junho.circunferencias.quadril,
+                        data.junho.circunferencias.peitoral,
+                        data.junho.circunferencias.abdomen,
+                        data.junho.circunferencias.coxa
+                    ],
+                    backgroundColor: colors.junho + '80',
+                    borderColor: colors.junho,
+                    borderWidth: 1
+                },
+                {
+                    label: 'Jul',
+                    data: [
+                        data.julho.circunferencias.ombro,
+                        data.julho.circunferencias.cintura,
+                        data.julho.circunferencias.quadril,
+                        data.julho.circunferencias.peitoral,
+                        data.julho.circunferencias.abdomen,
+                        data.julho.circunferencias.coxa
+                    ],
+                    backgroundColor: colors.julho + '80',
+                    borderColor: colors.julho,
+                    borderWidth: 1
+                },
+                {
+                    label: 'Ago',
+                    data: [
+                        data.agosto.circunferencias.ombro,
+                        data.agosto.circunferencias.cintura,
+                        data.agosto.circunferencias.quadril,
+                        data.agosto.circunferencias.peitoral,
+                        data.agosto.circunferencias.abdomen,
+                        data.agosto.circunferencias.coxa
+                    ],
+                    backgroundColor: colors.agosto + '80',
+                    borderColor: colors.agosto,
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        const circumferencesChart = new Chart(circumferencesCtx, {
             type: 'bar',
-            data: {
-                labels: circumferenceLabels,
-                datasets: [
-                    {
-                        label: 'Jun',
-                        data: [
-                            data.junho.circunferencias.ombro,
-                            data.junho.circunferencias.cintura,
-                            data.junho.circunferencias.quadril,
-                            data.junho.circunferencias.peitoral,
-                            data.junho.circunferencias.abdomen,
-                            data.junho.circunferencias.coxa
-                        ],
-                        backgroundColor: colors.junho + '80',
-                        borderColor: colors.junho,
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Jul',
-                        data: [
-                            data.julho.circunferencias.ombro,
-                            data.julho.circunferencias.cintura,
-                            data.julho.circunferencias.quadril,
-                            data.julho.circunferencias.peitoral,
-                            data.julho.circunferencias.abdomen,
-                            data.julho.circunferencias.coxa
-                        ],
-                        backgroundColor: colors.julho + '80',
-                        borderColor: colors.julho,
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Ago',
-                        data: [
-                            data.agosto.circunferencias.ombro,
-                            data.agosto.circunferencias.cintura,
-                            data.agosto.circunferencias.quadril,
-                            data.agosto.circunferencias.peitoral,
-                            data.agosto.circunferencias.abdomen,
-                            data.agosto.circunferencias.coxa
-                        ],
-                        backgroundColor: colors.agosto + '80',
-                        borderColor: colors.agosto,
-                        borderWidth: 1
-                    }
-                ]
-            },
+            data: JSON.parse(JSON.stringify(originalCircumferenceData)), // Clonando dados originais
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -507,75 +573,77 @@
 
         // Skinfolds Chart
         const skinfoldsCtx = document.getElementById('skinfoldsChart').getContext('2d');
-        const skinfoldLabels = ['Abdominal', 'Supra-ilíaca', 'Subescapular', 'Coxa', 'Tríceps', 'Axilar', 'Tórax'];
         
-        new Chart(skinfoldsCtx, {
-            type: 'radar',
-            data: {
-                labels: skinfoldLabels,
-                datasets: [
-                    {
-                        label: 'Jun',
-                        data: [
-                            data.junho.dobras.abdominal,
-                            data.junho.dobras.supraIliaca,
-                            data.junho.dobras.subescapular,
-                            data.junho.dobras.coxa,
-                            data.junho.dobras.triceps,
-                            data.junho.dobras.axilarMedia,
-                            data.junho.dobras.torax
-                        ],
-                        borderColor: colors.junho,
-                        backgroundColor: colors.junho + '20',
-                        pointBackgroundColor: colors.junho,
-                        pointBorderColor: colors.junho,
-                        pointRadius: 4
-                    },
-                    {
-                        label: 'Jul',
-                        data: [
-                            data.julho.dobras.abdominal,
-                            data.julho.dobras.supraIliaca,
-                            data.julho.dobras.subescapular,
-                            data.julho.dobras.coxa,
-                            data.julho.dobras.triceps,
-                            data.julho.dobras.axilarMedia,
-                            data.julho.dobras.torax
-                        ],
-                        borderColor: colors.julho,
-                        backgroundColor: colors.julho + '20',
-                        pointBackgroundColor: colors.julho,
-                        pointBorderColor: colors.julho,
-                        pointRadius: 4
-                    },
-                    {
-                        label: 'Ago',
-                        data: [
-                            data.agosto.dobras.abdominal,
-                            data.agosto.dobras.supraIliaca,
-                            data.agosto.dobras.subescapular,
-                            data.agosto.dobras.coxa,
-                            data.agosto.dobras.triceps,
-                            data.agosto.dobras.axilarMedia,
-                            data.agosto.dobras.torax
-                        ],
-                        borderColor: colors.agosto,
-                        backgroundColor: colors.agosto + '20',
-                        pointBackgroundColor: colors.agosto,
-                        pointBorderColor: colors.agosto,
-                        pointRadius: 4
-                    }
-                ]
-            },
+        const originalSkinfoldData = {
+            labels: ['Abdominal', 'Supra-ilíaca', 'Subescapular', 'Coxa', 'Tríceps', 'Axilar', 'Tórax'],
+            datasets: [
+                {
+                    label: 'Jun',
+                    data: [
+                        data.junho.dobras.abdominal,
+                        data.junho.dobras.supraIliaca,
+                        data.junho.dobras.subescapular,
+                        data.junho.dobras.coxa,
+                        data.junho.dobras.triceps,
+                        data.junho.dobras.axilarMedia,
+                        data.junho.dobras.torax
+                    ],
+                    backgroundColor: colors.junho + '80',
+                    borderColor: colors.junho,
+                    borderWidth: 1
+                },
+                {
+                    label: 'Jul',
+                    data: [
+                        data.julho.dobras.abdominal,
+                        data.julho.dobras.supraIliaca,
+                        data.julho.dobras.subescapular,
+                        data.julho.dobras.coxa,
+                        data.julho.dobras.triceps,
+                        data.julho.dobras.axilarMedia,
+                        data.julho.dobras.torax
+                    ],
+                    backgroundColor: colors.julho + '80',
+                    borderColor: colors.julho,
+                    borderWidth: 1
+                },
+                {
+                    label: 'Ago',
+                    data: [
+                        data.agosto.dobras.abdominal,
+                        data.agosto.dobras.supraIliaca,
+                        data.agosto.dobras.subescapular,
+                        data.agosto.dobras.coxa,
+                        data.agosto.dobras.triceps,
+                        data.agosto.dobras.axilarMedia,
+                        data.agosto.dobras.torax
+                    ],
+                    backgroundColor: colors.agosto + '80',
+                    borderColor: colors.agosto,
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        const skinfoldsChart = new Chart(skinfoldsCtx, {
+            type: 'bar',
+            data: JSON.parse(JSON.stringify(originalSkinfoldData)), // Clonando dados originais
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    r: {
+                    y: {
                         beginAtZero: true,
                         grid: { color: '#f1f5f9' },
-                        pointLabels: {
-                            font: { size: 9 }
+                        ticks: {
+                            font: { size: 10 }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { size: 9 },
+                            maxRotation: 45
                         }
                     }
                 },
@@ -588,6 +656,62 @@
                     }
                 }
             }
+        });
+
+        const circumferenceFilterCheckboxes = [
+            'filter-ombro', 'filter-cintura', 'filter-quadril', 
+            'filter-peitoral', 'filter-abdomen', 'filter-coxa-circ'
+        ];
+
+        function updateCircumferencesChart() {
+            const visibleIndices = [];
+            const visibleLabels = [];
+            
+            circumferenceFilterCheckboxes.forEach((checkboxId, index) => {
+                if (document.getElementById(checkboxId).checked) {
+                    visibleIndices.push(index);
+                    visibleLabels.push(originalCircumferenceData.labels[index]);
+                }
+            });
+
+            circumferencesChart.data.labels = visibleLabels;
+            circumferencesChart.data.datasets.forEach((dataset, datasetIndex) => {
+                dataset.data = visibleIndices.map(index => originalCircumferenceData.datasets[datasetIndex].data[index]);
+            });
+            
+            circumferencesChart.update();
+        }
+
+        const skinfoldFilterCheckboxes = [
+            'filter-abdominal', 'filter-suprailiaca', 'filter-subescapular', 
+            'filter-coxa', 'filter-triceps', 'filter-axilar', 'filter-torax'
+        ];
+
+        function updateSkinfoldsChart() {
+            const visibleIndices = [];
+            const visibleLabels = [];
+            
+            skinfoldFilterCheckboxes.forEach((checkboxId, index) => {
+                if (document.getElementById(checkboxId).checked) {
+                    visibleIndices.push(index);
+                    visibleLabels.push(originalSkinfoldData.labels[index]);
+                }
+            });
+
+            skinfoldsChart.data.labels = visibleLabels;
+            skinfoldsChart.data.datasets.forEach((dataset, datasetIndex) => {
+                dataset.data = visibleIndices.map(index => originalSkinfoldData.datasets[datasetIndex].data[index]);
+            });
+            
+            skinfoldsChart.update();
+        }
+
+        circumferenceFilterCheckboxes.forEach(checkboxId => {
+            document.getElementById(checkboxId).addEventListener('change', updateCircumferencesChart);
+        });
+
+        skinfoldFilterCheckboxes.forEach(checkboxId => {
+            document.getElementById(checkboxId).addEventListener('change', updateSkinfoldsChart);
         });
     </script>
 </body>
