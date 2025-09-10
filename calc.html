@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Juros Compostos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 30px 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .currency-input {
+            padding-left: 40px !important;
+        }
+
+        .percent-symbol {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .percent-input {
+            padding-right: 40px !important;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 16px;
+            color: white;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .result-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .final-result {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .final-result .result-label {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .final-result .result-value {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .monthly-progress {
+            margin-top: 30px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 16px;
+            padding: 25px;
+            display: none;
+        }
+
+        .monthly-progress.show {
+            display: block;
+            animation: slideUp 0.5s ease 0.2s both;
+        }
+
+        .monthly-progress h3 {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .progress-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .progress-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .progress-table td {
+            padding: 10px 8px;
+            text-align: center;
+            font-size: 11px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+
+        .progress-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .progress-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .month-number {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .total-value {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .interest-earned {
+            font-weight: 600;
+            color: #38a169;
+        }
+
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 12px;
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                border-radius: 16px;
+            }
+            
+            .form-container {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                padding: 25px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Juros Compostos</h1>
+            <p>Calcule o crescimento do seu investimento</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="input-group">
+                <label for="valorInicial">Valor Inicial</label>
+                <div class="input-wrapper">
+                    <span class="currency-symbol">R$</span>
+                    <input type="number" id="valorInicial" class="currency-input" placeholder="0,00" step="0.01" min="0">
+                </div>
+                <div class="error" id="errorValorInicial">Por favor, insira um valor válido</div>
+            </div>
+
+            <div class="input-group">
+                <label for="aporteMenusal">Aporte Mensal</label>
+                <div class="input-wrapper">
+                    <span class="currency-symbol">R$</span>
+                    <input type="number" id="aporteMenusal" class="currency-input" placeholder="0,00" step="0.01" min="0">
+                </div>
+                <div class="error" id="errorAporte">Por favor, insira um valor válido</div>
+            </div>
+
+            <div class="input-group">
+                <label for="meses">Período (meses)</label>
+                <input type="number" id="meses" placeholder="12" min="1" max="600">
+                <div class="error" id="errorMeses">Por favor, insira um período válido (1-600 meses)</div>
+            </div>
+
+            <div class="input-group">
+                <label for="jurosMensal">Taxa de Juros Mensal</label>
+                <div class="input-wrapper">
+                    <input type="number" id="jurosMensal" class="percent-input" placeholder="1,00" step="0.01" min="0" max="100">
+                    <span class="percent-symbol">%</span>
+                </div>
+                <div class="error" id="errorJuros">Por favor, insira uma taxa válida (0-100%)</div>
+            </div>
+
+            <button class="calculate-btn" onclick="calcularJuros()">
+                Calcular Investimento
+            </button>
+
+            <div class="results" id="results">
+                <div class="result-item">
+                    <span class="result-label">Valor Investido Total:</span>
+                    <span class="result-value" id="valorInvestido">R$ 0,00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Juros Ganhos:</span>
+                    <span class="result-value" id="jurosGanhos">R$ 0,00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Rentabilidade:</span>
+                    <span class="result-value" id="rentabilidade">0%</span>
+                </div>
+                <div class="final-result">
+                    <div class="result-label">Valor Final</div>
+                    <div class="result-value" id="valorFinal">R$ 0,00</div>
+                </div>
+            </div>
+
+            <div class="monthly-progress" id="monthlyProgress">
+                <h3>📊 Progresso Mensal</h3>
+                <div class="table-container">
+                    <table class="progress-table">
+                        <thead>
+                            <tr>
+                                <th>Mês</th>
+                                <th>Saldo Total</th>
+                                <th>Juros do Mês</th>
+                            </tr>
+                        </thead>
+                        <tbody id="progressTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatarMoeda(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
+        function formatarPorcentagem(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'percent',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(valor / 100);
+        }
+
+        function validarCampos() {
+            let valido = true;
+            
+            // Limpar erros anteriores
+            document.querySelectorAll('.error').forEach(error => {
+                error.style.display = 'none';
+            });
+
+            const valorInicial = parseFloat(document.getElementById('valorInicial').value) || 0;
+            const aporteMenusal = parseFloat(document.getElementById('aporteMenusal').value) || 0;
+            const meses = parseInt(document.getElementById('meses').value);
+            const jurosMensal = parseFloat(document.getElementById('jurosMensal').value);
+
+            if (valorInicial < 0) {
+                document.getElementById('errorValorInicial').style.display = 'block';
+                valido = false;
+            }
+
+            if (aporteMenusal < 0) {
+                document.getElementById('errorAporte').style.display = 'block';
+                valido = false;
+            }
+
+            if (valorInicial === 0 && aporteMenusal === 0) {
+                document.getElementById('errorValorInicial').textContent = 'Informe pelo menos o valor inicial ou aporte mensal';
+                document.getElementById('errorValorInicial').style.display = 'block';
+                valido = false;
+            }
+
+            if (!meses || meses < 1 || meses > 600) {
+                document.getElementById('errorMeses').style.display = 'block';
+                valido = false;
+            }
+
+            if (!jurosMensal || jurosMensal < 0 || jurosMensal > 100) {
+                document.getElementById('errorJuros').style.display = 'block';
+                valido = false;
+            }
+
+            return valido;
+        }
+
+        function calcularJuros() {
+            if (!validarCampos()) {
+                return;
+            }
+
+            const valorInicial = parseFloat(document.getElementById('valorInicial').value) || 0;
+            const aporteMenusal = parseFloat(document.getElementById('aporteMenusal').value) || 0;
+            const meses = parseInt(document.getElementById('meses').value);
+            const jurosMensal = parseFloat(document.getElementById('jurosMensal').value) / 100;
+
+            let saldoAtual = valorInicial;
+            const progressoMensal = [];
+            
+            for (let mes = 1; mes <= meses; mes++) {
+                const saldoAnterior = saldoAtual;
+                
+                // Aplicar juros sobre o saldo atual
+                const jurosDoMes = saldoAtual * jurosMensal;
+                saldoAtual += jurosDoMes;
+                
+                // Adicionar aporte mensal (se houver)
+                saldoAtual += aporteMenusal;
+                
+                progressoMensal.push({
+                    mes: mes,
+                    saldoTotal: saldoAtual,
+                    jurosDoMes: jurosDoMes
+                });
+            }
+
+            const valorFinal = saldoAtual;
+            const valorInvestidoTotal = valorInicial + (aporteMenusal * meses);
+            const jurosGanhos = valorFinal - valorInvestidoTotal;
+            const rentabilidade = valorInvestidoTotal > 0 ? (jurosGanhos / valorInvestidoTotal) * 100 : 0;
+
+            // Exibir resultados
+            document.getElementById('valorInvestido').textContent = formatarMoeda(valorInvestidoTotal);
+            document.getElementById('jurosGanhos').textContent = formatarMoeda(jurosGanhos);
+            document.getElementById('rentabilidade').textContent = formatarPorcentagem(rentabilidade);
+            document.getElementById('valorFinal').textContent = formatarMoeda(valorFinal);
+
+            const tableBody = document.getElementById('progressTableBody');
+            tableBody.innerHTML = '';
+            
+            progressoMensal.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="month-number">${item.mes}º</td>
+                    <td class="total-value">${formatarMoeda(item.saldoTotal)}</td>
+                    <td class="interest-earned">${formatarMoeda(item.jurosDoMes)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Mostrar seções de resultados
+            const resultsDiv = document.getElementById('results');
+            const progressDiv = document.getElementById('monthlyProgress');
+            
+            resultsDiv.classList.add('show');
+            progressDiv.classList.add('show');
+            
+            // Scroll suave para os resultados
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Adicionar eventos para calcular automaticamente quando os campos mudarem
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                // Remover erro quando o usuário começar a digitar
+                const errorElement = document.getElementById('error' + this.id.charAt(0).toUpperCase() + this.id.slice(1));
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            });
+        });
+
+        // Permitir cálculo com Enter
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calcularJuros();
+            }
+        });
+    </script>
+</body>
+</html>
